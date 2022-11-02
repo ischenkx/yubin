@@ -3,6 +3,7 @@ package postgrepo
 import (
 	"context"
 	"github.com/jackc/pgx/v5"
+	"log"
 	"smtp-client/internal/mailer"
 	"smtp-client/internal/mailer/subscription"
 	"smtp-client/internal/mailer/template"
@@ -60,15 +61,23 @@ func (r *Repo) PersonalReports() crud.CRUD[crud.PairKey[string, string], mailer.
 	return r.personalReports
 }
 
-func (r *Repo) Init(ctx context.Context) error {
-	if err := r.users.InitTable(ctx); err != nil {
-		return err
+func (r *Repo) Init(ctx context.Context) {
+	r.initialize(ctx, "users", r.users)
+	r.initialize(ctx, "templates", r.templates)
+	r.initialize(ctx, "subscriptions", r.subscriptions)
+	r.initialize(ctx, "reports", r.reports)
+	r.initialize(ctx, "sources", r.sources)
+	r.initialize(ctx, "publications", r.publications)
+	r.initialize(ctx, "personal reports", r.personalReports)
+
+}
+
+func (r *Repo) initialize(ctx context.Context, label string, i initializer) {
+	if err := i.Init(ctx); err != nil {
+		log.Printf("failed to initialize '%s': %s", label, err)
 	}
-	if err := r.templates.InitTable(ctx); err != nil {
-		return err
-	}
-	if err := r.subscriptions.InitTable(ctx); err != nil {
-		return err
-	}
-	return nil
+}
+
+type initializer interface {
+	Init(ctx context.Context) error
 }

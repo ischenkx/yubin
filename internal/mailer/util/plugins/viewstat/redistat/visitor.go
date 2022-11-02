@@ -8,16 +8,16 @@ import (
 	"log"
 	"math/rand"
 	"smtp-client/internal/mailer/util/plugins/viewstat"
+	"smtp-client/pkg/channel"
+	"smtp-client/pkg/pubsub"
 	"strings"
-	"sync"
 )
 
 type Visitor struct {
 	urls    []string
 	channel string
 	client  redis.UniversalClient
-	handles []chan viewstat.Identifier
-	mu      sync.RWMutex
+	pubsub  *pubsub.PubSub[viewstat.Identifier]
 }
 
 func New(urls []string, channel string, client redis.UniversalClient) *Visitor {
@@ -25,13 +25,14 @@ func New(urls []string, channel string, client redis.UniversalClient) *Visitor {
 		urls:    urls,
 		channel: channel,
 		client:  client,
+		pubsub:  pubsub.New[viewstat.Identifier](),
 	}
 }
 
 func (v *Visitor) Run(ctx context.Context) {
-	pubsub := v.client.Subscribe(ctx, v.channel)
-	messages := pubsub.Channel()
-	defer pubsub.Close()
+	ps := v.client.Subscribe(ctx, v.channel)
+	messages := ps.Channel()
+	defer ps.Close()
 
 	for {
 		select {
@@ -43,7 +44,7 @@ func (v *Visitor) Run(ctx context.Context) {
 				log.Println("failed to parse payload:", mes.Payload)
 				continue
 			}
-			v.publish(id)
+			v.pubsub.Publish(id)
 		}
 	}
 }
@@ -56,31 +57,8 @@ func (v *Visitor) GenerateLink(identifier viewstat.Identifier) (string, error) {
 	return fmt.Sprintf("%s/%s:%s", url, identifier.Publication, identifier.User), nil
 }
 
-func (v *Visitor) Visits() viewstat.Handle {
-	return v.newHandle()
-}
-
-func (v *Visitor) newHandle() *Handle {
-	v.mu.Lock()
-	defer v.mu.Unlock()
-	c := make(chan viewstat.Identifier, 2048)
-	v.handles = append(v.handles, c)
-	return &Handle{
-		channel: c,
-		visitor: v,
-	}
-}
-
-func (v *Visitor) removeHandle(c chan viewstat.Identifier) {
-	v.mu.Lock()
-	defer v.mu.Unlock()
-	for i, candidate := range v.handles {
-		if candidate == c {
-			v.handles[i] = v.handles[len(v.handles)-1]
-			v.handles = v.handles[:len(v.handles)-1]
-			break
-		}
-	}
+func (v *Visitor) Visits() channel.Handle[viewstat.Identifier] {
+	return v.pubsub.Subscribe()
 }
 
 func (v *Visitor) parsePayload(payload string) (viewstat.Identifier, bool) {
@@ -92,29 +70,4 @@ func (v *Visitor) parsePayload(payload string) (viewstat.Identifier, bool) {
 		Publication: parts[0],
 		User:        parts[1],
 	}, true
-}
-
-func (v *Visitor) publish(id viewstat.Identifier) {
-	v.mu.RLock()
-	defer v.mu.RUnlock()
-	for _, c := range v.handles {
-		select {
-		case c <- id:
-		default:
-		}
-	}
-}
-
-type Handle struct {
-	channel chan viewstat.Identifier
-	visitor *Visitor
-}
-
-func (h Handle) Chan() <-chan viewstat.Identifier {
-	return h.channel
-}
-
-func (h Handle) Close() {
-	close(h.channel)
-	h.visitor.removeHandle(h.channel)
 }

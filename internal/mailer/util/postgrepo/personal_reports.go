@@ -16,7 +16,7 @@ func NewPersonalReports(conn *pgx.Conn) *PersonalReports {
 	return &PersonalReports{conn: conn}
 }
 
-func (s *PersonalReports) InitTable() error {
+func (s *PersonalReports) Init(ctx context.Context) error {
 	sql := `
 		CREATE TABLE personal_reports (
 		    publication_id varchar(1024),
@@ -26,7 +26,7 @@ func (s *PersonalReports) InitTable() error {
 		    primary key (publication_id, user_id)
 		    )
 	`
-	_, err := s.conn.Exec(context.TODO(), sql)
+	_, err := s.conn.Exec(ctx, sql)
 	return err
 }
 

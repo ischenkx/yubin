@@ -1,22 +1,22 @@
 db:
   postgres:
-    host: localhost
+    host: db
     port: 5432
-    db: db
-    user: user
-    password: password
+    db: postgres
+    user: postgres
+    password: postgres
 
 api:
   http:
-    host: localhost
+    host: 0.0.0.0
     port: 6060
 
 view_stat:
   redis:
     channel: viewstat
-    addr: some_link
-    username: username
+    addr: addr
+    username: user
     password: password
     db: 0
   urls:
-    - your_template_for_view_stat_links
+    - some_url

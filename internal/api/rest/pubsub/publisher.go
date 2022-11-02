@@ -7,6 +7,7 @@ import (
 	"smtp-client/internal/api/rest/util"
 	"smtp-client/internal/mailer"
 	"smtp-client/pkg/data/crud"
+	"time"
 )
 
 type Publisher struct {
@@ -108,6 +109,13 @@ func (p *Publisher) publish(ctx *gin.Context) {
 		ctx.Status(http.StatusBadRequest)
 		return
 	}
+
+	var at *time.Time
+	if publication.At != nil {
+		at = new(time.Time)
+		*at = time.Unix(*publication.At, 0)
+	}
+
 	id, err := p.mailer.Publish(mailer.Use(mailer.PublishOptions{
 		SendOptions: mailer.SendOptions{
 			Topics:   publication.Topics,
@@ -115,7 +123,7 @@ func (p *Publisher) publish(ctx *gin.Context) {
 			SourceID: publication.Source,
 			Template: publication.Template,
 		},
-		At:   publication.At,
+		At:   at,
 		Meta: publication.Meta,
 	}))
 	if err != nil {
@@ -124,16 +132,4 @@ func (p *Publisher) publish(ctx *gin.Context) {
 		return
 	}
 	ctx.Data(http.StatusOK, gin.MIMEPlain, []byte(id))
-}
-
-func publication2dto(p mailer.Publication) PublicationDto {
-	return PublicationDto{
-		ID:       p.ID,
-		Topics:   p.Info.SendOptions.Topics,
-		Users:    p.Info.SendOptions.Users,
-		Template: p.Info.SendOptions.Template,
-		Source:   p.Info.SendOptions.SourceID,
-		At:       p.Info.At,
-		Meta:     p.Info.Meta,
-	}
 }

@@ -17,15 +17,32 @@ type PublicationDto struct {
 	Users    []string       `json:"users,omitempty"`
 	Template string         `json:"template,omitempty"`
 	Source   string         `json:"source,omitempty"`
-	At       *time.Time     `json:"at,omitempty"`
+	At       *int64         `json:"at,omitempty"`
 	Meta     map[string]any `json:"meta,omitempty"`
 }
 
+func publication2dto(p mailer.Publication) PublicationDto {
+	var at *int64
+	if p.Info.At != nil {
+		at = new(int64)
+		*at = p.Info.At.Unix()
+	}
+	return PublicationDto{
+		ID:       p.ID,
+		Topics:   p.Info.SendOptions.Topics,
+		Users:    p.Info.SendOptions.Users,
+		Template: p.Info.SendOptions.Template,
+		Source:   p.Info.SendOptions.SourceID,
+		At:       at,
+		Meta:     p.Info.Meta,
+	}
+}
+
 type ReportDto struct {
-	PublicationID string   `json:"publication_id,omitempty"`
-	Status        string   `json:"status,omitempty"`
-	Failed        []string `json:"failed,omitempty"`
-	OK            []string `json:"ok,omitempty"`
+	PublicationID string   `json:"publication_id"`
+	Status        string   `json:"status"`
+	Failed        []string `json:"failed"`
+	OK            []string `json:"ok"`
 }
 
 func report2dto(r mailer.Report) ReportDto {

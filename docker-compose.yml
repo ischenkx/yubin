@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '3030:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  mailer:
+    container_name: mailer
+    build:
+      context: ./
+    image: mailer
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 6060:6060
+    links:
+      - db
+volumes:
+  db:
+    driver: local

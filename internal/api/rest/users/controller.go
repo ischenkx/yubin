@@ -30,8 +30,8 @@ func (c *Controller) get(ctx *gin.Context) {
 	for _, u := range users {
 		dtos = append(dtos, user2dto(u))
 	}
-
-	ctx.JSON(http.StatusOK, users)
+	dtos = util.ValidateEmptySlice(dtos)
+	ctx.JSON(http.StatusOK, dtos)
 }
 
 func (c *Controller) getByID(ctx *gin.Context) {

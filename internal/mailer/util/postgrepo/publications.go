@@ -16,7 +16,7 @@ func NewPublications(conn *pgx.Conn) *Publications {
 	return &Publications{conn: conn}
 }
 
-func (s *Publications) InitTable() error {
+func (s *Publications) Init(ctx context.Context) error {
 	sql := `
 		CREATE TABLE publications (
 		    id varchar(256) PRIMARY KEY,
@@ -28,7 +28,7 @@ func (s *Publications) InitTable() error {
 		    meta json
 		    )
 	`
-	_, err := s.conn.Exec(context.TODO(), sql)
+	_, err := s.conn.Exec(ctx, sql)
 	return err
 }
 

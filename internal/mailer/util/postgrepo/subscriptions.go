@@ -14,7 +14,7 @@ type Subscriptions struct {
 	conn *pgx.Conn
 }
 
-func (s *Subscriptions) InitTable(ctx context.Context) error {
+func (s *Subscriptions) Init(ctx context.Context) error {
 	sql := `
 		CREATE TABLE subscriptions (
 				subscriber varchar(256),

@@ -1,2 +1,4 @@
 local-config.yml
+docker-config.yml
 .idea
+bin

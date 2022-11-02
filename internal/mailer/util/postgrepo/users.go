@@ -14,7 +14,7 @@ type Users struct {
 	conn *pgx.Conn
 }
 
-func (users *Users) InitTable(ctx context.Context) error {
+func (users *Users) Init(ctx context.Context) error {
 	sql := `
 		CREATE TABLE users (
 				id varchar(256) PRIMARY KEY,

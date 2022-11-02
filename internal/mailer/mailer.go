@@ -179,6 +179,7 @@ func (m *Mailer) deliver(id string) (Report, error) {
 		}
 
 		if err := m.post.Deliver(pack); err != nil {
+			log.Println("failed to deliver:", err)
 			report.Failed = append(report.Failed, u.ID)
 		} else {
 			report.OK = append(report.OK, u.ID)
@@ -237,8 +238,26 @@ processor:
 	}
 }
 
+func (m *Mailer) processScheduler(ctx context.Context) {
+	sub := m.scheduler.Handle()
+	defer sub.Close()
+processor:
+	for {
+		select {
+		case id := <-sub.Chan():
+			if err := m.pushToQueue(id); err != nil {
+				log.Println("failed to push to queue a scheduled publication:", err)
+			}
+		case <-ctx.Done():
+			break processor
+		}
+	}
+}
+
 func (m *Mailer) Run(ctx context.Context) {
 	for i := 0; i < runtime.NumCPU(); i++ {
 		go m.processQueue(ctx)
 	}
+
+	go m.processScheduler(ctx)
 }

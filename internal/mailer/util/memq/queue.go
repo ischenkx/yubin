@@ -2,7 +2,7 @@ package memq
 
 import (
 	"context"
-	"smtp-client/internal/mailer"
+	"smtp-client/pkg/channel"
 )
 
 type Queue[T any] chan T
@@ -18,7 +18,7 @@ func (q Queue[T]) Push(t T) error {
 	return nil
 }
 
-func (q Queue[T]) Handle() mailer.Handle[T] {
+func (q Queue[T]) Handle() channel.Handle[T] {
 	return newHandle(q)
 }
 

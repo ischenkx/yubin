@@ -24,7 +24,7 @@ type Templates struct {
 	conn   *pgx.Conn
 }
 
-func (templates *Templates) InitTable(ctx context.Context) error {
+func (templates *Templates) Init(ctx context.Context) error {
 	sql := `
 		CREATE TABLE templates (
 		    data varchar(65000),

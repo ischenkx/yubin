@@ -16,7 +16,7 @@ func NewReports(conn *pgx.Conn) *Reports {
 	return &Reports{conn: conn}
 }
 
-func (s *Reports) InitTable() error {
+func (s *Reports) Init(ctx context.Context) error {
 	sql := `
 		CREATE TABLE reports (
 		    publication_id varchar(1024) PRIMARY KEY,
@@ -25,7 +25,7 @@ func (s *Reports) InitTable() error {
 		    ok text[]
 		    )
 	`
-	_, err := s.conn.Exec(context.TODO(), sql)
+	_, err := s.conn.Exec(ctx, sql)
 	return err
 }
 

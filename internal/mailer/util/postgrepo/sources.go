@@ -16,7 +16,7 @@ func NewSources(conn *pgx.Conn) *Sources {
 	return &Sources{conn: conn}
 }
 
-func (s *Sources) InitTable() error {
+func (s *Sources) Init(ctx context.Context) error {
 	sql := `
 		CREATE TABLE sources (
 		    name varchar(1024) PRIMARY KEY,
@@ -26,7 +26,7 @@ func (s *Sources) InitTable() error {
 		    port int
 		    )
 	`
-	_, err := s.conn.Exec(context.TODO(), sql)
+	_, err := s.conn.Exec(ctx, sql)
 	return err
 }
 
