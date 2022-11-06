@@ -6,17 +6,17 @@ import (
 )
 
 type UpdateDto struct {
-	Email   *string
-	Name    *string
-	Surname *string
-	Meta    map[string]any
+	Email   *string        `json:"email,omitempty"`
+	Name    *string        `json:"name,omitempty"`
+	Surname *string        `json:"surname,omitempty"`
+	Meta    map[string]any `json:"meta,omitempty"`
 }
 
 type CreateDto struct {
-	Email   string
-	Name    string
-	Surname string
-	Meta    map[string]any
+	Email   string         `json:"email,omitempty"`
+	Name    string         `json:"name,omitempty"`
+	Surname string         `json:"surname,omitempty"`
+	Meta    map[string]any `json:"meta,omitempty"`
 }
 
 type UserDto struct {

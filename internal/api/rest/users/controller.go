@@ -128,6 +128,6 @@ func (c *Controller) InitRoutes(group *gin.RouterGroup) {
 	group.GET("/", c.get)
 	group.GET("/:id", c.getByID)
 	group.DELETE("/:id", c.delete)
-	group.PUT("/:id", c.update)
+	group.PUT("/", c.update)
 	group.POST("/", c.create)
 }
