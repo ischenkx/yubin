@@ -2,8 +2,8 @@ package pubsub
 
 import (
 	"smtp-client/internal/api/rest/util"
-	"smtp-client/internal/mailer"
-	"smtp-client/internal/mailer/subscription"
+	"smtp-client/internal/yubin"
+	"smtp-client/internal/yubin/subscription"
 	"time"
 )
 
@@ -21,7 +21,7 @@ type PublicationDto struct {
 	Meta     map[string]any `json:"meta,omitempty"`
 }
 
-func publication2dto(p mailer.Publication) PublicationDto {
+func publication2dto(p yubin.Publication) PublicationDto {
 	var at *int64
 	if p.Info.At != nil {
 		at = new(int64)
@@ -45,7 +45,7 @@ type ReportDto struct {
 	OK            []string `json:"ok"`
 }
 
-func report2dto(r mailer.Report) ReportDto {
+func report2dto(r yubin.Report) ReportDto {
 	return ReportDto{
 		PublicationID: r.PublicationID,
 		Status:        r.Status,
@@ -61,7 +61,7 @@ type PersonalReportDto struct {
 	Meta          map[string]any `json:"meta,omitempty"`
 }
 
-func personalReport2dto(r mailer.PersonalReport) PersonalReportDto {
+func personalReport2dto(r yubin.PersonalReport) PersonalReportDto {
 	return PersonalReportDto{
 		PublicationID: r.PublicationID,
 		UserID:        r.UserID,

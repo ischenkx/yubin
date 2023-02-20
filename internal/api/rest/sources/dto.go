@@ -1,8 +1,8 @@
 package sources
 
 import (
-	"smtp-client/internal/mailer"
-	"smtp-client/internal/mailer/mail"
+	"smtp-client/internal/yubin"
+	"smtp-client/internal/yubin/mail"
 )
 
 type SourceDto struct {
@@ -13,7 +13,7 @@ type SourceDto struct {
 	Port     int    `json:"port,omitempty"`
 }
 
-func source2dto(source mailer.NamedSource) SourceDto {
+func source2dto(source yubin.NamedSource) SourceDto {
 	return SourceDto{
 		Name:     source.Name,
 		Address:  source.Address,
@@ -23,8 +23,8 @@ func source2dto(source mailer.NamedSource) SourceDto {
 	}
 }
 
-func dto2source(source SourceDto) mailer.NamedSource {
-	return mailer.NamedSource{
+func dto2source(source SourceDto) yubin.NamedSource {
+	return yubin.NamedSource{
 		Name: source.Name,
 		Source: mail.Source{
 			Address:  source.Address,

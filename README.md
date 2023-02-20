@@ -1,4 +1,4 @@
-## Mailer
+## Yubin
 A service for email delivery
 
 ### Supports
@@ -44,10 +44,10 @@ How to set up?
 2. Run ```cmd/viewstat/main.go``` somewhere (Heroku?)
 3. Provide the redis client information and a link to the viewstat server in config
 
-#### Mailer
+#### Yubin
 
 1. Fix config (provide correct database information)
 2. Install Go and Docker (Compose)
 3. Run `bash ./docker-boot.sh`
 
-Now you can interact with Mailer via a REST api (check out docs in ```internal/api/rest```)!
+Now you can interact with Yubin via a REST api (check out docs in ```internal/api/rest```)!

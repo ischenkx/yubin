@@ -5,13 +5,13 @@ import (
 	"log"
 	"net/http"
 	"smtp-client/internal/api/rest/util"
-	"smtp-client/internal/mailer"
+	"smtp-client/internal/yubin"
 	"smtp-client/pkg/data/crud"
 	"time"
 )
 
 type Publisher struct {
-	mailer *mailer.Mailer
+	mailer *yubin.Yubin
 }
 
 func (p *Publisher) InitRoutes(group *gin.RouterGroup) {
@@ -116,8 +116,8 @@ func (p *Publisher) publish(ctx *gin.Context) {
 		*at = time.Unix(*publication.At, 0)
 	}
 
-	id, err := p.mailer.Publish(mailer.Use(mailer.PublishOptions{
-		SendOptions: mailer.SendOptions{
+	id, err := p.mailer.Publish(yubin.Use(yubin.PublishOptions{
+		SendOptions: yubin.SendOptions{
 			Topics:   publication.Topics,
 			Users:    publication.Users,
 			SourceID: publication.Source,

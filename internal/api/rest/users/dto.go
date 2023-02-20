@@ -2,7 +2,7 @@ package users
 
 import (
 	"smtp-client/internal/api/rest/util"
-	"smtp-client/internal/mailer/user"
+	"smtp-client/internal/yubin/user"
 )
 
 type UpdateDto struct {

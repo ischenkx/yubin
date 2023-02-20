@@ -4,7 +4,7 @@ import (
 	"errors"
 	"io"
 	"smtp-client/internal/api/rest/util"
-	"smtp-client/internal/mailer/template"
+	"smtp-client/internal/yubin/template"
 )
 
 type UpdateTemplateDto struct {

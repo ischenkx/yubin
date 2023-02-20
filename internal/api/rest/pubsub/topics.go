@@ -4,11 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"smtp-client/internal/api/rest/util"
-	"smtp-client/internal/mailer"
+	"smtp-client/internal/yubin"
 )
 
 type Topics struct {
-	mailer *mailer.Mailer
+	mailer *yubin.Yubin
 }
 
 func (t *Topics) InitRoutes(group *gin.RouterGroup) {

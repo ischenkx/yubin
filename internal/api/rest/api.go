@@ -7,17 +7,17 @@ import (
 	"smtp-client/internal/api/rest/sources"
 	"smtp-client/internal/api/rest/templates"
 	"smtp-client/internal/api/rest/users"
-	"smtp-client/internal/mailer"
+	"smtp-client/internal/yubin"
 )
 
 type API struct {
-	mailer *mailer.Mailer
+	yubin  *yubin.Yubin
 	engine *gin.Engine
 }
 
-func New(mailer *mailer.Mailer) *API {
+func New(yubin *yubin.Yubin) *API {
 	api := &API{
-		mailer: mailer,
+		yubin:  yubin,
 		engine: gin.New(),
 	}
 	api.InitRoutes()
@@ -25,10 +25,10 @@ func New(mailer *mailer.Mailer) *API {
 }
 
 func (api *API) InitRoutes() {
-	pubsub.NewController(api.mailer).InitRoutes(api.engine.Group("/pubsub"))
-	templates.NewController(api.mailer).InitRoutes(api.engine.Group("/templates"))
-	users.NewController(api.mailer).InitRoutes(api.engine.Group("/users"))
-	sources.NewController(api.mailer).InitRoutes(api.engine.Group("/sources"))
+	pubsub.NewController(api.yubin).InitRoutes(api.engine.Group("/pubsub"))
+	templates.NewController(api.yubin).InitRoutes(api.engine.Group("/templates"))
+	users.NewController(api.yubin).InitRoutes(api.engine.Group("/users"))
+	sources.NewController(api.yubin).InitRoutes(api.engine.Group("/sources"))
 }
 
 func (api *API) Run(addr ...string) {

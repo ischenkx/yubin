@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 5
   mailer:
-    container_name: mailer
+    container_name: yubin
     build:
       context: ./
     image: mailer

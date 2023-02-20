@@ -5,11 +5,11 @@ import (
 	"log"
 	"net/http"
 	"smtp-client/internal/api/rest/util"
-	"smtp-client/internal/mailer"
+	"smtp-client/internal/yubin"
 )
 
 type Subscriptions struct {
-	mailer *mailer.Mailer
+	mailer *yubin.Yubin
 }
 
 func (s *Subscriptions) InitRoutes(group *gin.RouterGroup) {

@@ -5,14 +5,14 @@ import (
 	"log"
 	"net/http"
 	"smtp-client/internal/api/rest/util"
-	"smtp-client/internal/mailer"
+	"smtp-client/internal/yubin"
 )
 
 type Controller struct {
-	mailer *mailer.Mailer
+	mailer *yubin.Yubin
 }
 
-func NewController(mailer *mailer.Mailer) *Controller {
+func NewController(mailer *yubin.Yubin) *Controller {
 	return &Controller{mailer: mailer}
 }
 
