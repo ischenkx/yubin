@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/jackc/pgx/v5"
 	"os"
 	cfg "smtp-client/cmd/yubin/config"
 	"smtp-client/internal/yubin/util/html"
